@@ -14,7 +14,9 @@ public class Objeto {
     private Long id;
     private String nome;
     private String dica;
-
+    private String dica2;
+    private String dica3;
+    private String categoria;
  }
 
 
