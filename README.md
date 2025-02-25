@@ -10,10 +10,3 @@ O jogo "Adivinhe o Objeto" é uma experiência divertida e educativa para crian�
 - **H2 Database** 🗄️ - Banco de dados em memória para armazenar as informações do jogo
 - **Java 17+** ☕ - Linguagem de programação utilizada
 
-## Licença 📜
-
-Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
-
----
