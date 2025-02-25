@@ -7,6 +7,5 @@ O jogo "Adivinhe o Objeto" é uma experiência divertida e educativa para crian�
 **Tecnologias Utilizadas**  
 - **Spring Boot** 🚀 - Framework Java para construção de aplicações web
 - **Spring Data JPA** 📦 - Para manipulação de banco de dados
-- **H2 Database** 🗄️ - Banco de dados em memória para armazenar as informações do jogo
 - **Java 17+** ☕ - Linguagem de programação utilizada
 
