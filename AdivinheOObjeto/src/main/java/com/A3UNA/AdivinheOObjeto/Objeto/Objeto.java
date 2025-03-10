@@ -1,4 +1,4 @@
-package com.A3UNA.AdivinheOObjeto.Objetos;
+package com.A3UNA.AdivinheOObjeto.Objeto;
 import jakarta.persistence.*;
 import lombok.*;
 

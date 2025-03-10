@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo Adivinhe o Objeto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #game-container, #jogadores-container {
+            display: none;
+        }
+        input, button {
+            margin: 5px;
+            padding: 10px;
+        }
+        table {
+            width: 50%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Tela de Login -->
+<div id="login-container">
+    <h2>Bem-vindo ao Jogo!</h2>
+    <label for="nomeJogador">Digite seu nome:</label>
+    <input type="text" id="nomeJogador" placeholder="Nome do jogador">
+    <button onclick="iniciarJogo()">Iniciar Jogo</button>
+    <p id="login-msg" style="color: red;"></p>
+</div>
+
+<!-- Tela do Jogo -->
+<div id="game-container">
+    <h2>Jogo Adivinhe o Objeto</h2>
+    <p id="game-status"></p>
+    <button onclick="obterDica()">Obter Dica</button>
+    <p id="dica"></p>
+    <input type="text" id="resposta" placeholder="Digite sua resposta">
+    <button onclick="verificarResposta()">Enviar Resposta</button>
+    <p id="resultado"></p>
+    <button onclick="verExplicacao()">Ver Explicação</button>
+    <p id="explicacao"></p>
+</div>
+
+<!-- Tela de Jogadores -->
+<div id="jogadores-container">
+    <h2>Ranking de Jogadores</h2>
+    <button onclick="listarJogadores()">Atualizar Ranking</button>
+    <table>
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Pontuação</th>
+        </tr>
+        </thead>
+        <tbody id="jogadores-lista"></tbody>
+    </table>
+</div>
+
+<script>
+    let nomeJogador = "";
+
+    async function iniciarJogo() {
+        nomeJogador = document.getElementById("nomeJogador").value.trim();
+
+        if (nomeJogador === "") {
+            document.getElementById("login-msg").textContent = "Por favor, digite um nome!";
+            return;
+        }
+
+        const response = await fetch(`http://localhost:8080/jogo/iniciar?nomeJogador=${nomeJogador}`);
+        const data = await response.text();
+
+        if (response.ok) {
+            document.getElementById("game-status").textContent = data;
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("game-container").style.display = "block";
+            document.getElementById("jogadores-container").style.display = "block";
+        } else {
+            document.getElementById("login-msg").textContent = data;
+        }
+    }
+
+    async function obterDica() {
+        const response = await fetch("http://localhost:8080/jogo/dica");
+        const data = await response.json();
+        document.getElementById("dica").textContent = data.Dica || data.Erro;
+    }
+
+    async function verificarResposta() {
+        const resposta = document.getElementById("resposta").value.trim();
+        if (resposta === "") {
+            document.getElementById("resultado").textContent = "Digite uma resposta!";
+            return;
+        }
+
+        const response = await fetch(`http://localhost:8080/jogo/verificar?resposta=${resposta}`, {
+            method: "POST"
+        });
+        const data = await response.json();
+
+        document.getElementById("resultado").textContent = data.Resultado;
+        if (data.Dica) {
+            document.getElementById("dica").textContent = data.Dica;
+        }
+    }
+
+    async function verExplicacao() {
+        const response = await fetch("http://localhost:8080/jogo/explicacao");
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById("explicacao").textContent = `Nome: ${data.nome}, Explicação: ${data.explicacao}`;
+        } else {
+            document.getElementById("explicacao").textContent = "Nenhum objeto foi selecionado.";
+        }
+    }
+
+    async function listarJogadores() {
+        const response = await fetch("http://localhost:8080/jogo/jogadores");
+        if (response.ok) {
+            const data = await response.json();
+            const tabela = document.getElementById("jogadores-lista");
+            tabela.innerHTML = "";
+
+            data.content.forEach(jogador => {
+                const linha = `<tr><td>${jogador.nome}</td><td>${jogador.pontuacao}</td></tr>`;
+                tabela.innerHTML += linha;
+            });
+        } else {
+            document.getElementById("jogadores-lista").innerHTML = "<tr><td colspan='2'>Erro ao carregar jogadores.</td></tr>";
+        }
+    }
+</script>
+
+</body>
+</html>

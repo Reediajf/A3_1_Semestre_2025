@@ -1,0 +1,1 @@
+ALTER TABLE jogador MODIFY COLUMN pontuacao INT;
