@@ -1,7 +1,10 @@
 package com.A3UNA.AdivinheOObjeto.Jogador;
 
+import com.A3UNA.AdivinheOObjeto.Inventario.Inventario;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Table (name = "jogador")
 @Entity (name = "Jogador")
@@ -17,6 +20,10 @@ public class Jogador {
     private Long id;
     private String nome;
     private int pontuacao = 0;
+
+    @OneToMany(mappedBy = "jogador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Inventario> inventario;
+
 
     public Jogador ( DadosCadastroJogador dados ) {
         this.nome = dados.nome();

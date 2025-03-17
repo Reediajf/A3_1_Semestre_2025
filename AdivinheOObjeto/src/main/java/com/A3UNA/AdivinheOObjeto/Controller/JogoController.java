@@ -133,7 +133,8 @@ public class JogoController {
 
         if (respostaCorreta) {
             objetoExplicacao = objetoSelecionado ;
-            objetoSelecionado = null;
+            reiniciar();
+
         } else {
             verificar.put("Dica", "Se precisar, solicite uma dica");
         }
@@ -141,12 +142,25 @@ public class JogoController {
         return ResponseEntity.ok(verificar);
     }
 
-    @GetMapping("/explicacao")
-    public ResponseEntity<DadosListagemObjeto> explicacao() {
-        if (objetoExplicacao == null) {
-            return ResponseEntity.notFound().build();
+    private void reiniciar() {
+        numeroDicasUsadas = 0;
+        List<Objeto> objetos = objetoRepository.findAll();
+        List<DadosListagemObjeto> listaObjetos = objetos.stream()
+                .map(DadosListagemObjeto::new)
+                .collect(Collectors.toList());
+
+        if (!listaObjetos.isEmpty()) {
+            objetoSelecionado = DadosListagemObjeto.ObjetoAleatorio(listaObjetos);
         }
-        return ResponseEntity.ok(objetoExplicacao);
+    }
+
+    @GetMapping("/explicacao")
+    public String explicacao() {
+        if (objetoExplicacao == null) {
+            return "Nenhum objeto selecionado";
+        }
+
+         return objetoExplicacao.toString();
     }
 
     @GetMapping("/jogadores")

@@ -21,7 +21,4 @@ public class JogadorController {
         repository.save(new Jogador (dados));
     }
 
-
-
-
 }
